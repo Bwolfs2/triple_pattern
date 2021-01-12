@@ -4,7 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:flutter_triple/src/stores/notifier_store.dart';
 
 void main() {
-  late Counter counter;
+  Counter counter;
 
   setUpAll(() {
     counter = Counter();

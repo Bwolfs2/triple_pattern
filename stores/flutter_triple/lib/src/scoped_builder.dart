@@ -1,24 +1,34 @@
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends StatefulWidget {
-  final Widget Function(BuildContext context, TState state)? onState;
-  final Widget Function(BuildContext context, TError? error)? onError;
-  final Widget Function(BuildContext context)? onLoading;
+class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends StatefulWidget {
+  final Widget Function(BuildContext context, TState state) onState;
+  final Widget Function(BuildContext context, TError error) onError;
+  final Widget Function(BuildContext context) onLoading;
   final TStore store;
 
-  const ScopedBuilder({Key? key, this.onState, this.onError, this.onLoading, required this.store})
-      : assert(onState != null || onError != null || onLoading != null, 'Define at least one listener (onState, onError or onLoading)'),
+  const ScopedBuilder(
+      {Key key,
+      this.onState,
+      this.onError,
+      this.onLoading,
+      @required this.store})
+      : assert(onState != null || onError != null || onLoading != null,
+            'Define at least one listener (onState, onError or onLoading)'),
         super(key: key);
 
   @override
-  _ScopedBuilderState<TStore, TError, TState> createState() => _ScopedBuilderState<TStore, TError, TState>();
+  _ScopedBuilderState<TStore, TError, TState> createState() =>
+      _ScopedBuilderState<TStore, TError, TState>();
 }
 
-class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends State<ScopedBuilder<TStore, TError, TState>> {
-  Widget? child;
+class _ScopedBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<ScopedBuilder<TStore, TError, TState>> {
+  Widget child;
 
-  Disposer? disposer;
+  Disposer disposer;
 
   bool isDisposed = false;
 
@@ -64,7 +74,9 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
     if (child == null) {
       switch (widget.store.triple.event) {
         case (TripleEvent.loading):
-          child = widget.store.triple.isLoading ? widget.onLoading?.call(context) : widget.onState?.call(context, widget.store.state);
+          child = widget.store.triple.isLoading
+              ? widget.onLoading?.call(context)
+              : widget.onState?.call(context, widget.store.state);
           break;
         case (TripleEvent.error):
           child = widget.onError?.call(context, widget.store.error);
@@ -83,6 +95,6 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         child = widget.onState?.call(context, widget.store.state);
       }
     }
-    return child!;
+    return child;
   }
 }

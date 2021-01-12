@@ -56,20 +56,28 @@ void main() {
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
-        return state + 1;
-      }));
+  FutureOr<void> increment() =>
+      execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
+            return state + 1;
+          }));
 
   FutureOr<void> incrementWithError() => execute(() => Future.error('error'));
-  FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
+  FutureOr<void> incrementEither() => executeEither(() =>
+      Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
-abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
+abstract class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  Triple<Error, State> propagated;
+
+  @override
+  void initState() {
+    propagated = triple;
+  }
 
   @override
   Future destroy() async {}
@@ -82,9 +90,9 @@ abstract class TestImplements<Error extends Object, State extends Object> extend
 
   @override
   Disposer observer({
-    void Function(State state)? onState,
-    void Function(bool loading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(State state) onState,
+    void Function(bool loading) onLoading,
+    void Function(Error error) onError,
   }) {
     return () async {};
   }

@@ -27,12 +27,18 @@ class Counter extends TestImplements<Exception, int> {
   }
 }
 
-abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
+abstract class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  Triple<Error, State> propagated;
+
+  @override
+  void initState() {
+    propagated = triple;
+  }
 
   @override
   Future destroy() async {}
@@ -45,9 +51,9 @@ abstract class TestImplements<Error extends Object, State extends Object> extend
 
   @override
   Disposer observer({
-    void Function(State state)? onState,
-    void Function(bool loading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(State state) onState,
+    void Function(bool loading) onLoading,
+    void Function(Error error) onError,
   }) {
     return () async {};
   }

@@ -5,13 +5,13 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
     TState extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context, Triple<TError, TState> triple)
       builder;
-  final bool Function(Triple<TError, TState> triple)? selector;
+  final bool Function(Triple<TError, TState> triple) selector;
   final TStore store;
 
   const TripleBuilder({
-    Key? key,
-    required this.store,
-    required this.builder,
+    Key key,
+    @required this.store,
+    @required this.builder,
     this.selector,
   }) : super(key: key);
 
@@ -23,9 +23,9 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
 class _TripleBuilderState<TStore extends Store<TError, TState>,
         TError extends Object, TState extends Object>
     extends State<TripleBuilder<TStore, TError, TState>> {
-  Widget? child;
+  Widget child;
 
-  Disposer? disposer;
+  Disposer disposer;
 
   void _listener(dynamic value) {
     final isSelected = widget.selector?.call(widget.store.triple) ?? true;
@@ -40,7 +40,7 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (disposer != null) {
-      disposer!.call();
+      disposer.call();
     }
     disposer = widget.store.observer(
       onState: _listener,
@@ -60,6 +60,6 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
     if (child == null) {
       child = widget.builder(context, widget.store.triple);
     }
-    return child!;
+    return child;
   }
 }

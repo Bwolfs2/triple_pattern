@@ -5,7 +5,7 @@ import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
 void main() {
-  late TestImplements<MyException, int> store;
+  TestImplements<MyException, int> store;
 
   setUp(() {
     store = TestImplements(0);
@@ -18,12 +18,20 @@ void main() {
 
   test('check implementation. setLoading', () {
     store.setLoading(true);
-    expect(store.propagated, Triple<MyException, int>(state: 0, isLoading: true, event: TripleEvent.loading));
+    expect(
+        store.propagated,
+        Triple<MyException, int>(
+            state: 0, isLoading: true, event: TripleEvent.loading));
   });
 
   test('check implementation. setError', () {
     store.setError(const MyException('error'));
-    expect(store.propagated, Triple<MyException, int>(state: 0, error: const MyException('error'), event: TripleEvent.error));
+    expect(
+        store.propagated,
+        Triple<MyException, int>(
+            state: 0,
+            error: const MyException('error'),
+            event: TripleEvent.error));
   });
 
   test('check implementation. disctinct setState', () {
@@ -51,19 +59,27 @@ void main() {
   });
 }
 
-class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> with MementoMixin implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State>
+    with MementoMixin
+    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  Triple<Error, State> propagated;
+
+  @override
+  void initState() {
+    propagated = triple;
+  }
 
   @override
   Future destroy() async {}
 
   @override
   Disposer observer({
-    void Function(State state)? onState,
-    void Function(bool loading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(State state) onState,
+    void Function(bool loading) onLoading,
+    void Function(Error error) onError,
   }) {
     return () async {};
   }

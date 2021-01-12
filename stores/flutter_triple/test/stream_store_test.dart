@@ -3,8 +3,8 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:triple/triple.dart';
 
 void main() {
-  late Counter counter;
-  late Disposer disposer;
+  Counter counter;
+  Disposer disposer;
 
   setUpAll(() {
     counter = Counter();

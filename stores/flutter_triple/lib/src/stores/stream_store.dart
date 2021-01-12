@@ -10,22 +10,29 @@ abstract class StreamStore<Error extends Object, State extends Object>
       StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   @override
-  late final Stream<State> selectState = _tripleController.stream
-      .where((triple) => triple.event == TripleEvent.state)
-      .map((triple) => triple.state);
+  Stream<State> selectState;
 
   @override
-  late final Stream<Error> selectError = _tripleController.stream
-      .where((triple) => triple.event == TripleEvent.error)
-      .where((triple) => triple.error != null)
-      .map((triple) => triple.error!);
+  Stream<Error> selectError;
 
   @override
-  late final Stream<bool> selectLoading = _tripleController.stream
-      .where((triple) => triple.event == TripleEvent.loading)
-      .map((triple) => triple.isLoading);
+  Stream<bool> selectLoading;
 
   StreamStore(State initialState) : super(initialState);
+
+  void initState() {
+    selectState = _tripleController.stream
+        .where((triple) => triple.event == TripleEvent.state)
+        .map((triple) => triple.state);
+
+    selectError = _tripleController.stream
+        .where((triple) => triple.event == TripleEvent.error)
+        .where((triple) => triple.error != null)
+        .map((triple) => triple.error);
+    selectLoading = _tripleController.stream
+        .where((triple) => triple.event == TripleEvent.loading)
+        .map((triple) => triple.isLoading);
+  }
 
   @protected
   @override
@@ -41,15 +48,15 @@ abstract class StreamStore<Error extends Object, State extends Object>
 
   @override
   Disposer observer({
-    void Function(State error)? onState,
-    void Function(bool isLoading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(State error) onState,
+    void Function(bool isLoading) onLoading,
+    void Function(Error error) onError,
   }) {
     final _sub = _tripleController.stream.listen((triple) {
       if (triple.event == TripleEvent.state) {
         onState?.call(triple.state);
       } else if (triple.event == TripleEvent.error) {
-        onError?.call(triple.error!);
+        onError?.call(triple.error);
       } else if (triple.event == TripleEvent.loading) {
         onLoading?.call(triple.isLoading);
       }

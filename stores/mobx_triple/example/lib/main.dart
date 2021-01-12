@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key key, @required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -59,9 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ScopedBuilder(
                 store: counter,
-                onLoading: (_, loading) {
+                onLoading: (_) {
                   return Text(
-                    !loading
+                    counter.isLoading
                         ? 'You have pushed the button this many times:'
                         : 'Carregando...',
                   );
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: ScopedBuilder(
         store: counter,
         onError: (_, error) => _floatingButton(error == null),
-        onLoading: (_, isLoading) => _floatingButton(!isLoading),
+        onLoading: (_) => _floatingButton(counter.isLoading),
         onState: (_, __) => _floatingButton(true),
       ),
     );

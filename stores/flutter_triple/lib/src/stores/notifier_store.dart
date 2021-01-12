@@ -5,16 +5,22 @@ import 'package:triple/triple.dart';
 abstract class NotifierStore<Error extends Object, State extends Object>
     extends Store<Error, State>
     implements
-        Selectors<ValueListenable<Error?>, ValueListenable<State>,
+        Selectors<ValueListenable<Error>, ValueListenable<State>,
             ValueListenable<bool>> {
-  late final _selectState = RxNotifier<State>(triple.state);
-  late final _selectError = RxNotifier<Error?>(triple.error);
-  late final _selectLoading = RxNotifier<bool>(triple.isLoading);
+  RxNotifier<State> _selectState;
+  RxNotifier<Error> _selectError;
+  RxNotifier<bool> _selectLoading;
+
+  void initState() {
+    _selectState = RxNotifier<State>(triple.state);
+    _selectError = RxNotifier<Error>(triple.error);
+    _selectLoading = RxNotifier<bool>(triple.isLoading);
+  }
 
   @override
   ValueListenable<State> get selectState => _selectState;
   @override
-  ValueListenable<Error?> get selectError => _selectError;
+  ValueListenable<Error> get selectError => _selectError;
   @override
   ValueListenable<bool> get selectLoading => _selectLoading;
 
@@ -22,7 +28,7 @@ abstract class NotifierStore<Error extends Object, State extends Object>
   State get state => selectState.value;
 
   @override
-  Error? get error => selectError.value;
+  Error get error => selectError.value;
 
   @override
   bool get isLoading => selectLoading.value;
@@ -43,12 +49,12 @@ abstract class NotifierStore<Error extends Object, State extends Object>
 
   @override
   Disposer observer(
-      {void Function(State state)? onState,
-      void Function(bool loading)? onLoading,
-      void Function(Error error)? onError}) {
+      {void Function(State state) onState,
+      void Function(bool loading) onLoading,
+      void Function(Error error) onError}) {
     final funcState = () => onState?.call(state);
     final funcLoading = () => onLoading?.call(isLoading);
-    final funcError = () => error != null ? onError?.call(error!) : null;
+    final funcError = () => error != null ? onError?.call(error) : null;
 
     if (onState != null) {
       selectState.addListener(funcState);
@@ -71,7 +77,7 @@ abstract class NotifierStore<Error extends Object, State extends Object>
         if (onError != null) {
           selectError.removeListener(funcError);
         }
-      } catch(ex) {}
+      } catch (ex) {}
     };
   }
 
