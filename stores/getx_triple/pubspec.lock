@@ -145,9 +145,11 @@ packages:
   triple:
     dependency: "direct main"
     description:
-      path: "../../triple"
-      relative: true
-    source: path
+      path: triple
+      ref: HEAD
+      resolved-ref: a5ce10dac19976193b172a2f36f340fa513564df
+      url: "https://github.com/Bwolfs2/triple_pattern.git"
+    source: git
     version: "0.0.26"
   typed_data:
     dependency: transitive

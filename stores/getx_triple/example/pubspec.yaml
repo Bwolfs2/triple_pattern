@@ -28,9 +28,14 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   flutter_triple:
-     path: ../../flutter_triple
+    git:
+      url: https://github.com/Bwolfs2/triple_pattern.git   
+      path: store/flutter_triple
+      
   getx_triple:
-    path: ../
+    git:
+      url: https://github.com/Bwolfs2/triple_pattern.git   
+      path: store/getx_triple
 
 dev_dependencies:
   flutter_test:

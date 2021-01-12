@@ -10,7 +10,9 @@ dependencies:
   mobx: ^1.2.1+4
   meta: ^1.2.4
   triple: 
-    path: ../../triple
+    git:
+      url: https://github.com/Bwolfs2/triple_pattern.git   
+      path: triple
 
 dev_dependencies:
   test: ^1.15.7
